@@ -39,6 +39,6 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id") //user id   почему то налл
     private User user;
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SubTask> subtasks;
 }

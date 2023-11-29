@@ -2,6 +2,7 @@ package com.learning.taskplanner.services;
 
 import com.learning.taskplanner.interfaces.TaskService;
 import com.learning.taskplanner.model.Task;
+import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import com.learning.taskplanner.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Override
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    public List<Task> getTasksByUser(User user) {
+        return taskRepository.findByUser(user);
     }
 
     @Override
