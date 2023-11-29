@@ -9,12 +9,35 @@
 
 <h2>Task List</h2>
 
-<table border="1">
+<!-- Форма создания новой задачи -->
+<form th:action="@{/tasks/create}" method="post" th:object="${newTask}">
+  <label for="title">Title:</label>
+  <input type="text" id="title" name="title" th:field="*{title}" required/>
+
+  <label for="description">Description:</label>
+  <textarea id="description" name="description" th:field="*{description}"></textarea>
+
+  <label for="deadline">Deadline:</label>
+  <input type="date" id="deadline" name="deadline" th:field="*{deadline}" class="form-control" />
+
+  <label for="priority">Priority:</label>
+  <select id="priority" name="priority" th:field="*{priority}" required>
+    <option value="LOW">Low</option>
+    <option value="MEDIUM">Medium</option>
+    <option value="HIGH">High</option>
+  </select>
+
+  <button type="submit">Create Task</button>
+</form>
+
+<!-- Список задач -->
+<table>
   <thead>
   <tr>
     <th>Title</th>
     <th>Description</th>
     <th>Deadline</th>
+    <th>Status</th>
     <th>Priority</th>
   </tr>
   </thead>
@@ -23,12 +46,11 @@
     <td th:text="${task.title}"></td>
     <td th:text="${task.description}"></td>
     <td th:text="${task.deadline}"></td>
+    <td th:text="${task.status}"></td>
     <td th:text="${task.priority}"></td>
   </tr>
   </tbody>
 </table>
-
-<a href="/tasks/create">Create Task</a>
 
 </body>
 </html>

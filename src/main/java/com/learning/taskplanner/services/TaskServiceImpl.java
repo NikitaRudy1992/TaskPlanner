@@ -2,10 +2,10 @@ package com.learning.taskplanner.services;
 
 import com.learning.taskplanner.interfaces.TaskService;
 import com.learning.taskplanner.model.Task;
+import com.learning.taskplanner.model.enums.TaskStatus;
 import com.learning.taskplanner.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    @Transactional
     public void createTask(Task task) {
+        task.setStatus(TaskStatus.NEW);
         taskRepository.save(task);
     }
 }

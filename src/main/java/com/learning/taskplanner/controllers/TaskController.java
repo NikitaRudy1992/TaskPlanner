@@ -18,27 +18,21 @@ import java.util.List;
 @RequestMapping("/tasks")
 @AllArgsConstructor
 public class TaskController {
-    private TaskService taskService;
+    private final TaskService taskService;
 
     @GetMapping
     public String showTasks(Model model) {
         List<Task> tasks = taskService.getAllTasks();
         model.addAttribute("tasks", tasks);
+        model.addAttribute("newTask", new Task()); // Для формы создания новой задачи
         return "tasklist";
     }
 
-    @GetMapping("/create")
-    public String showTaskForm(Model model) {
-        model.addAttribute("task", new Task());
-        return "taskform";
-    }
-
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") @Valid Task task, BindingResult result) {
+    public String createTask(@ModelAttribute("task") Task task, BindingResult result) {
         if (result.hasErrors()) {
-            return "taskform";
+            return "tasklist";
         }
-
         taskService.createTask(task);
         return "redirect:/tasks";
     }
