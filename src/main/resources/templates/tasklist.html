@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task List</title>
+</head>
+<body>
+
+<h2>Task List</h2>
+
+<table border="1">
+  <thead>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Deadline</th>
+    <th>Priority</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="task : ${tasks}">
+    <td th:text="${task.title}"></td>
+    <td th:text="${task.description}"></td>
+    <td th:text="${task.deadline}"></td>
+    <td th:text="${task.priority}"></td>
+  </tr>
+  </tbody>
+</table>
+
+<a href="/tasks/create">Create Task</a>
+
+</body>
+</html>

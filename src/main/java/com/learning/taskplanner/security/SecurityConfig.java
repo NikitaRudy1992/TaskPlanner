@@ -28,11 +28,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/register", "/login").permitAll()
-                .antMatchers("/hello").authenticated()
+                .antMatchers("/tasks", "/taskform").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/hello", true)
+                .defaultSuccessUrl("/tasks", true)
                 .and()
                 .logout()
                 .logoutUrl("/logout")
