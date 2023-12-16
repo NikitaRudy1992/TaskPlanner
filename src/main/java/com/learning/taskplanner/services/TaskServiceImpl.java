@@ -5,6 +5,7 @@ import com.learning.taskplanner.model.Task;
 import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import com.learning.taskplanner.repositories.TaskRepository;
+import com.learning.taskplanner.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private TaskRepository taskRepository;
+    private UserRepository userRepository;
 
     @Override
     public List<Task> getTasksByUser(User user) {
@@ -22,7 +24,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void createTask(Task task) {
+    public void createTask(Task task, Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        task.setUser(user);
         task.setStatus(TaskStatus.NEW);
         taskRepository.save(task);
     }

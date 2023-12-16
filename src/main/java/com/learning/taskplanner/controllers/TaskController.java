@@ -36,9 +36,7 @@ public class TaskController {
             return "tasklist";
         }
 
-        // Установка текущего пользователя
-        task.setUser(currentUser);
-        taskService.createTask(task);
+        taskService.createTask(task, currentUser.getUserId());
 
         return "redirect:/tasks";
     }

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TaskService {
     List<Task> getTasksByUser(User user);
-    void createTask(Task task);
+    void createTask(Task task, Long userId);
 }

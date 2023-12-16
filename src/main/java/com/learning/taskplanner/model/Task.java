@@ -8,7 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
-
+//требуется валидация
 @Entity
 @Table(name = "tasks")
 @Data
@@ -37,8 +37,8 @@ public class Task {
     private TaskPriority priority;
 
     @ManyToOne
-    @JoinColumn(name = "user_id") //user id   почему то налл
+    @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.EAGER) //позже сменить на lazy
     private List<SubTask> subtasks;
 }
