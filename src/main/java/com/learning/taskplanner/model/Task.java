@@ -6,10 +6,6 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 //требуется валидация
@@ -22,26 +18,20 @@ public class Task {
     @Column(name = "task_id")
     private Long taskId;
 
-    @NotBlank(message = "Title must not be blank")
     @Column(name = "title")
     private String title;
 
-    @Size(max = 500, message = "Description must not exceed 500 characters")
     @Column(name = "description")
     private String description;
 
-    @NotNull(message = "Deadline cannot be null")
-    @FutureOrPresent(message = "Deadline must be in the present or future")
     @Column(name = "deadline")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate deadline;
 
-    @NotNull(message = "Status cannot be null")
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private TaskStatus status;
 
-    @NotNull(message = "Priority cannot be null")
     @Column(name = "priority")
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
