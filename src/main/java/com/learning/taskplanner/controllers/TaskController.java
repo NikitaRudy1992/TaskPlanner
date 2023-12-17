@@ -31,14 +31,12 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") Task task, BindingResult result, @AuthenticationPrincipal User currentUser) {
+    public String createTask(@Valid @ModelAttribute("task") Task task, BindingResult result, @AuthenticationPrincipal User currentUser) {
         if (result.hasErrors()) {
             return "tasklist";
         }
 
-        // Установка текущего пользователя
-        task.setUser(currentUser);
-        taskService.createTask(task);
+        taskService.createTask(task, currentUser.getUserId());
 
         return "redirect:/tasks";
     }
