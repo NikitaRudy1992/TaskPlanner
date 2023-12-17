@@ -31,7 +31,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") Task task, BindingResult result, @AuthenticationPrincipal User currentUser) {
+    public String createTask(@Valid @ModelAttribute("task") Task task, BindingResult result, @AuthenticationPrincipal User currentUser) {
         if (result.hasErrors()) {
             return "tasklist";
         }
