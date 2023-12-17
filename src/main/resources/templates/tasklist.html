@@ -39,6 +39,7 @@
     <th>Deadline</th>
     <th>Status</th>
     <th>Priority</th>
+    <th>Change Status</th> <!-- Добавляем заголовок для колонки изменения статуса -->
   </tr>
   </thead>
   <tbody>
@@ -48,6 +49,18 @@
     <td th:text="${task.deadline}"></td>
     <td th:text="${task.status}"></td>
     <td th:text="${task.priority}"></td>
+    <td>
+      <!-- Форма для обновления статуса задачи -->
+      <form th:action="@{/tasks/updateStatus/{taskId}(taskId=${task.taskId})}" method="post">
+        <select name="status">
+          <option value="NEW" th:selected="${task.status == 'NEW'}">New</option>
+          <option value="IN_PROGRESS" th:selected="${task.status == 'IN_PROGRESS'}">In Progress</option>
+          <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">Completed</option>
+          <option value="CANCELLED" th:selected="${task.status == 'CANCELLED'}">Cancelled</option>
+        </select>
+        <button type="submit">Update</button>
+      </form>
+    </td>
   </tr>
   </tbody>
 </table>

@@ -31,4 +31,11 @@ public class TaskServiceImpl implements TaskService {
         task.setStatus(TaskStatus.NEW);
         taskRepository.save(task);
     }
+    @Override
+    public void updateTaskStatus(Long taskId, TaskStatus newStatus) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        task.setStatus(newStatus);
+        taskRepository.save(task);
+    }
 }
