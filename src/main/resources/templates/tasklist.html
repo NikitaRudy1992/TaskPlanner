@@ -9,6 +9,33 @@
 
 <h2>Task List</h2>
 
+<form th:action="@{/tasks/search}" method="get">
+  <label for="searchTitle">Title:</label>
+  <input type="text" id="searchTitle" name="title"/>
+
+  <label for="searchStatus">Status:</label>
+  <select id="searchStatus" name="status">
+    <option value="">Any</option>
+    <option value="NEW">New</option>
+    <option value="IN_PROGRESS">In Progress</option>
+    <option value="COMPLETED">Completed</option>
+    <option value="CANCELLED">Cancelled</option>
+  </select>
+
+  <label for="searchPriority">Priority:</label>
+  <select id="searchPriority" name="priority">
+    <option value="">Any</option>
+    <option value="LOW">Low</option>
+    <option value="MEDIUM">Medium</option>
+    <option value="HIGH">High</option>
+  </select>
+
+  <label for="searchDeadline">Deadline:</label>
+  <input type="date" id="searchDeadline" name="deadline"/>
+
+  <button type="submit">Search</button>
+</form>
+
 <!-- Форма создания новой задачи -->
 <form th:action="@{/tasks/create}" method="post" th:object="${newTask}">
   <label for="title">Title:</label>
@@ -39,10 +66,11 @@
     <th>Deadline</th>
     <th>Status</th>
     <th>Priority</th>
-    <th>Change Status</th> <!-- Добавляем заголовок для колонки изменения статуса -->
+    <th>Change Status</th>
   </tr>
   </thead>
   <tbody>
+  <!-- Итерация по задачам, возвращенным из контроллера -->
   <tr th:each="task : ${tasks}">
     <td th:text="${task.title}"></td>
     <td th:text="${task.description}"></td>

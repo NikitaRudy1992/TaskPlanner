@@ -3,8 +3,10 @@ package com.learning.taskplanner.controllers;
 import com.learning.taskplanner.interfaces.TaskService;
 import com.learning.taskplanner.model.Task;
 import com.learning.taskplanner.model.User;
+import com.learning.taskplanner.model.enums.TaskPriority;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import lombok.AllArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -42,5 +45,16 @@ public class TaskController {
     public String updateTaskStatus(@PathVariable Long taskId, @RequestParam("status") TaskStatus status) {
         taskService.updateTaskStatus(taskId, status);
         return "redirect:/tasks";
+    }
+
+    @GetMapping("/search")
+    public String searchTasks(@RequestParam(required = false) String title,
+                              @RequestParam(required = false) TaskStatus status,
+                              @RequestParam(required = false) TaskPriority priority,
+                              @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate deadline,
+                              Model model) {
+        List<Task> tasks = taskService.searchTasks(title, status, priority, deadline);
+        model.addAttribute("tasks", tasks);
+        return "tasklist";
     }
 }
