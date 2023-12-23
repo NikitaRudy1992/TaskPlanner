@@ -12,5 +12,5 @@ public interface TaskService {
     List<Task> getTasksByUser(User user);
     void createTask(Task task, Long userId);
     void updateTaskStatus(Long taskId, TaskStatus newStatus);
-    List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline);
+    List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline, User user);
 }

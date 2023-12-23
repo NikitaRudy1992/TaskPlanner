@@ -1,6 +1,7 @@
 package com.learning.taskplanner.specifications;
 
 import com.learning.taskplanner.model.Task;
+import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.TaskPriority;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,11 +13,10 @@ import java.util.List;
 
 public class TaskSpecification {
 
-    public static Specification<Task> findByCriteria(String title, TaskStatus status, TaskPriority priority, LocalDate deadline) {
+    public static Specification<Task> findByCriteria(String title, TaskStatus status, TaskPriority priority, LocalDate deadline, User user) {
         return (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            // Критерии поиска
             if (title != null && !title.isEmpty()) {
                 predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + title.toLowerCase() + "%"));
             }
@@ -28,6 +28,9 @@ public class TaskSpecification {
             }
             if (deadline != null) {
                 predicates.add(criteriaBuilder.equal(root.get("deadline"), deadline));
+            }
+            if (user != null) {
+                predicates.add(criteriaBuilder.equal(root.get("user"), user));
             }
 
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

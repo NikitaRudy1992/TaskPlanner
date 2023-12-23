@@ -9,6 +9,7 @@ import com.learning.taskplanner.repositories.TaskRepository;
 import com.learning.taskplanner.repositories.UserRepository;
 import com.learning.taskplanner.specifications.TaskSpecification;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -43,7 +44,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline) {
-        return taskRepository.findAll(TaskSpecification.findByCriteria(title, status, priority, deadline));
+    public List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline, User user) {
+        Specification<Task> spec = TaskSpecification.findByCriteria(title, status, priority, deadline, user);
+        return taskRepository.findAll(spec);
     }
 }

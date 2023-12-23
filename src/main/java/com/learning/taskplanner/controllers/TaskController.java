@@ -6,14 +6,11 @@ import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.TaskPriority;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import lombok.AllArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -51,10 +48,14 @@ public class TaskController {
     public String searchTasks(@RequestParam(required = false) String title,
                               @RequestParam(required = false) TaskStatus status,
                               @RequestParam(required = false) TaskPriority priority,
-                              @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate deadline,
+                              @RequestParam(required = false) LocalDate deadline,
+                              @AuthenticationPrincipal User currentUser,
                               Model model) {
-        List<Task> tasks = taskService.searchTasks(title, status, priority, deadline);
+        List<Task> searchResults = taskService.searchTasks(title, status, priority, deadline, currentUser);
+        model.addAttribute("searchResults", searchResults);
+        List<Task> tasks = taskService.getTasksByUser(currentUser);
         model.addAttribute("tasks", tasks);
+        model.addAttribute("newTask", new Task());
         return "tasklist";
     }
 }
