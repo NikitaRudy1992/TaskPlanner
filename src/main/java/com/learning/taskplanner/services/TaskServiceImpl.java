@@ -3,12 +3,16 @@ package com.learning.taskplanner.services;
 import com.learning.taskplanner.interfaces.TaskService;
 import com.learning.taskplanner.model.Task;
 import com.learning.taskplanner.model.User;
+import com.learning.taskplanner.model.enums.TaskPriority;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import com.learning.taskplanner.repositories.TaskRepository;
 import com.learning.taskplanner.repositories.UserRepository;
+import com.learning.taskplanner.specifications.TaskSpecification;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -37,5 +41,11 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new RuntimeException("Task not found"));
         task.setStatus(newStatus);
         taskRepository.save(task);
+    }
+
+    @Override
+    public List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline, User user) {
+        Specification<Task> spec = TaskSpecification.findByCriteria(title, status, priority, deadline, user);
+        return taskRepository.findAll(spec);
     }
 }
