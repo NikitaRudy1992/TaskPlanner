@@ -67,7 +67,6 @@
       border-radius: 4px;
       font-size: 16px;
     }
-
     .menu-button:hover {
       background-color: #0056b3;
     }
@@ -77,6 +76,10 @@
 
 <div class="container">
   <h2>Task List</h2>
+
+  <div style="margin-top: 20px; margin-bottom: 20px;">
+    <a href="/tasks/progress" class="menu-button">View Task Progress</a>
+  </div>
 
   <!-- Форма поиска -->
   <div class="search-form">
@@ -164,6 +167,9 @@
     </thead>
     <tbody>
     <tr th:each="task : ${tasks}">
+      <td>
+        <a th:href="@{/tasks/{taskId}(taskId=${task.taskId})}" th:text="${task.title}"></a>
+      </td>
       <td th:text="${task.title}"></td>
       <td th:text="${task.description}"></td>
       <td th:text="${task.deadline}"></td>

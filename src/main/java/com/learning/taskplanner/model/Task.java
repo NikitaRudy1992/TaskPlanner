@@ -7,6 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 //требуется валидация
 @Entity
 @Table(name = "tasks")
@@ -38,6 +41,7 @@ public class Task {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
- /*   @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<SubTask> subtasks;*/
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<SubTask> subTasks = new ArrayList<>();
 }

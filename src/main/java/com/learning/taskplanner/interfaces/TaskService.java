@@ -13,4 +13,8 @@ public interface TaskService {
     void createTask(Task task, Long userId);
     void updateTaskStatus(Long taskId, TaskStatus newStatus);
     List<Task> searchTasks(String title, TaskStatus status, TaskPriority priority, LocalDate deadline, User user);
+    boolean areAllSubTasksCompleted(Long taskId);
+    List<Task> getCompletedTasks(User user);
+    List<Task> getIncompleteTasks(User user);
+    Task findById(Long taskId);
 }
