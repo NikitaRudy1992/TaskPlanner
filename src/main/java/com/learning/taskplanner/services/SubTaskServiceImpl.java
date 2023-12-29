@@ -9,11 +9,23 @@ import com.learning.taskplanner.repositories.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class SubTaskServiceImpl implements SubTaskService {
 
     private final SubTaskRepository subTaskRepository;
+    private final TaskRepository taskRepository;
+
+    @Override
+    public void addSubTask(Long taskId, SubTask subTask) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        subTask.setTask(task);
+        subTask.setStatus(TaskStatus.NEW);
+        subTaskRepository.save(subTask);
+    }
 
     @Override
     public void updateSubTaskStatus(Long subTaskId, TaskStatus newStatus) {
@@ -21,5 +33,14 @@ public class SubTaskServiceImpl implements SubTaskService {
                 .orElseThrow(() -> new RuntimeException("SubTask not found"));
         subTask.setStatus(newStatus);
         subTaskRepository.save(subTask);
+    }
+    @Override
+    public List<SubTask> getSubTasksByTask(Task task) {
+        return subTaskRepository.findByTask(task);
+    }
+    @Override
+    public SubTask findById(Long subTaskId) {
+        return subTaskRepository.findById(subTaskId)
+                .orElseThrow(() -> new RuntimeException("SubTask not found"));
     }
 }

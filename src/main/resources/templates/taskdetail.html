@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed; /* Фиксированная ширина колонок */
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            word-wrap: break-word; /* Перенос слов на новую строку */
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .task-form, .subtask-form {
+            margin-bottom: 20px;
+        }
+        input, select, button {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .menu-button {
+            display: inline-block;
+            padding: 8px 15px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .menu-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Task Details</h2>
+
+    <!-- Детали выбранной задачи -->
+    <div>
+        <h3 th:text="${task.title}"></h3>
+        <p th:text="${task.description}"></p>
+        <!-- Другие детали задачи -->
+    </div>
+
+    <!-- Форма для добавления новой подзадачи -->
+    <div class="subtask-form">
+        <h3>Add New SubTask</h3>
+        <form th:action="@{/tasks/{taskId}/addSubTask(taskId=${task.taskId})}" method="post">
+            <input type="text" name="title" placeholder="SubTask Title" required/>
+            <!-- Другие поля подзадачи, если необходимо -->
+            <button type="submit">Add SubTask</button>
+        </form>
+    </div>
+
+    <!-- Список подзадач -->
+    <h3>SubTasks</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="subTask : ${subTasks}">
+            <td th:text="${subTask.title}"></td>
+            <td th:text="${subTask.status}"></td>
+            <td>
+                <!-- Форма для обновления статуса подзадачи -->
+                <form th:action="@{/tasks/subtasks/updateStatus/{subTaskId}(subTaskId=${subTask.subtaskId})}" method="post">
+                    <select name="status">
+                        <option value="NEW">New</option>
+                        <option value="IN_PROGRESS">In Progress</option>
+                        <option value="COMPLETED">Completed</option>
+                        <option value="CANCELLED">Cancelled</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+                <!-- Дополнительно можно добавить кнопку удаления подзадачи -->
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/tasks" class="menu-button">Back to Task List</a>
+</div>
+
+</body>
+</html>

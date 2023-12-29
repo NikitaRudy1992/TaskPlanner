@@ -68,4 +68,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getIncompleteTasks(User user) {
         return taskRepository.findByUserAndStatusNot(user, TaskStatus.COMPLETED);
     }
+    @Override
+    public Task findById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+    }
 }

@@ -31,12 +31,21 @@ public class TaskController {
         return "tasklist";
     }
 
+    @GetMapping("/{taskId}")
+    public String showTaskDetails(@PathVariable Long taskId, Model model) {
+        Task task = taskService.findById(taskId);
+        List<SubTask> subTasks = subTaskService.getSubTasksByTask(task);
+        model.addAttribute("task", task);
+        model.addAttribute("subTasks", subTasks);
+        return "taskDetail";
+    }
+
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("task") Task task, BindingResult result, @AuthenticationPrincipal User currentUser) {
+    public String createTask(@ModelAttribute("newTask") Task newTask, BindingResult result, @AuthenticationPrincipal User currentUser) {
         if (result.hasErrors()) {
             return "tasklist";
         }
-        taskService.createTask(task, currentUser.getUserId());
+        taskService.createTask(newTask, currentUser.getUserId());
         return "redirect:/tasks";
     }
 
@@ -61,27 +70,20 @@ public class TaskController {
         return "tasklist";
     }
 
-    @PostMapping("/subtasks/updateStatus/{subTaskId}")
-    public String updateSubTask(@PathVariable Long subTaskId,
-                                      @RequestParam("status") TaskStatus status) {
-        subTaskService.updateSubTaskStatus(subTaskId, status);
-        return "redirect:/tasks";
-    }
-
     @PostMapping("/{taskId}/addSubTask")
     public String addSubTask(@PathVariable Long taskId, @ModelAttribute("subTask") SubTask subTask, BindingResult result) {
         if (result.hasErrors()) {
-            return "taskDetail"; // Предполагается наличие страницы taskDetail
+            return "redirect:/tasks/" + taskId;
         }
-
         subTaskService.addSubTask(taskId, subTask);
         return "redirect:/tasks/" + taskId;
     }
 
-    // Обновление статуса подзадачи
     @PostMapping("/subtasks/updateStatus/{subTaskId}")
     public String updateSubTaskStatus(@PathVariable Long subTaskId, @RequestParam("status") TaskStatus status) {
+        SubTask subTask = subTaskService.findById(subTaskId);
         subTaskService.updateSubTaskStatus(subTaskId, status);
-        return "redirect:/tasks"; // Укажите соответствующий URL для перенаправления
+        Long taskId = subTask.getTask().getTaskId();
+        return "redirect:/tasks/" + taskId;
     }
 }

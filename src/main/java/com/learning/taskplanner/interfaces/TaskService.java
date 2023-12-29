@@ -16,4 +16,5 @@ public interface TaskService {
     boolean areAllSubTasksCompleted(Long taskId);
     List<Task> getCompletedTasks(User user);
     List<Task> getIncompleteTasks(User user);
+    Task findById(Long taskId);
 }

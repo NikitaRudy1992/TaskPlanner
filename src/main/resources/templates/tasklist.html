@@ -164,6 +164,9 @@
     </thead>
     <tbody>
     <tr th:each="task : ${tasks}">
+      <td>
+        <a th:href="@{/tasks/{taskId}(taskId=${task.taskId})}" th:text="${task.title}"></a>
+      </td>
       <td th:text="${task.title}"></td>
       <td th:text="${task.description}"></td>
       <td th:text="${task.deadline}"></td>
