@@ -86,4 +86,14 @@ public class TaskController {
         Long taskId = subTask.getTask().getTaskId();
         return "redirect:/tasks/" + taskId;
     }
+    @GetMapping("/progress")
+    public String showTaskProgress(Model model, @AuthenticationPrincipal User currentUser) {
+        List<Task> completedTasks = taskService.getCompletedTasks(currentUser);
+        List<Task> incompleteTasks = taskService.getIncompleteTasks(currentUser);
+
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("incompleteTasks", incompleteTasks);
+
+        return "taskprogress";
+    }
 }

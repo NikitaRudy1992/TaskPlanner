@@ -30,8 +30,12 @@ public class SubTaskServiceImpl implements SubTaskService {
     @Override
     public void updateSubTaskStatus(Long subTaskId, TaskStatus newStatus) {
         SubTask subTask = subTaskRepository.findById(subTaskId)
-                .orElseThrow(() -> new RuntimeException("SubTask not found"));
+                .orElseThrow(() -> new RuntimeException("SubTask not found"));//подумать над исключением
         subTask.setStatus(newStatus);
+        if (newStatus == TaskStatus.COMPLETED) {
+            subTask.setCompleted(true);
+        } //продумать или удаление после выполнения из списка или динамическое изменение completed boolean
+
         subTaskRepository.save(subTask);
     }
     @Override
