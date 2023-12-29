@@ -1,5 +1,6 @@
 package com.learning.taskplanner.model;
 
+import com.learning.taskplanner.model.enums.TaskStatus;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,10 +17,14 @@ public class SubTask {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "status", nullable = false)
-    private String status;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+    @Column(name = "completed")
+    private boolean completed = false;
 }

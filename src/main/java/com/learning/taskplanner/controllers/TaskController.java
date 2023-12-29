@@ -1,6 +1,8 @@
 package com.learning.taskplanner.controllers;
 
+import com.learning.taskplanner.interfaces.SubTaskService;
 import com.learning.taskplanner.interfaces.TaskService;
+import com.learning.taskplanner.model.SubTask;
 import com.learning.taskplanner.model.Task;
 import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.TaskPriority;
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final SubTaskService subTaskService;
 
     @GetMapping
     public String showTasks(Model model, @AuthenticationPrincipal User currentUser) {
@@ -33,11 +36,10 @@ public class TaskController {
         if (result.hasErrors()) {
             return "tasklist";
         }
-
         taskService.createTask(task, currentUser.getUserId());
-
         return "redirect:/tasks";
     }
+
     @PostMapping("/updateStatus/{taskId}")
     public String updateTaskStatus(@PathVariable Long taskId, @RequestParam("status") TaskStatus status) {
         taskService.updateTaskStatus(taskId, status);
@@ -57,5 +59,29 @@ public class TaskController {
         model.addAttribute("tasks", tasks);
         model.addAttribute("newTask", new Task());
         return "tasklist";
+    }
+
+    @PostMapping("/subtasks/updateStatus/{subTaskId}")
+    public String updateSubTask(@PathVariable Long subTaskId,
+                                      @RequestParam("status") TaskStatus status) {
+        subTaskService.updateSubTaskStatus(subTaskId, status);
+        return "redirect:/tasks";
+    }
+
+    @PostMapping("/{taskId}/addSubTask")
+    public String addSubTask(@PathVariable Long taskId, @ModelAttribute("subTask") SubTask subTask, BindingResult result) {
+        if (result.hasErrors()) {
+            return "taskDetail"; // Предполагается наличие страницы taskDetail
+        }
+
+        subTaskService.addSubTask(taskId, subTask);
+        return "redirect:/tasks/" + taskId;
+    }
+
+    // Обновление статуса подзадачи
+    @PostMapping("/subtasks/updateStatus/{subTaskId}")
+    public String updateSubTaskStatus(@PathVariable Long subTaskId, @RequestParam("status") TaskStatus status) {
+        subTaskService.updateSubTaskStatus(subTaskId, status);
+        return "redirect:/tasks"; // Укажите соответствующий URL для перенаправления
     }
 }
