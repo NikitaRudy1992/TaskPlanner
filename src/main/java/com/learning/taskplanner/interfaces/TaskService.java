@@ -17,4 +17,5 @@ public interface TaskService {
     List<Task> getCompletedTasks(User user);
     List<Task> getIncompleteTasks(User user);
     Task findById(Long taskId);
+    List<Task> getTasksByUserExcludeCompleted(User user);
 }
