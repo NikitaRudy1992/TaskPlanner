@@ -43,8 +43,12 @@ public class TaskServiceImpl implements TaskService {
         if (newStatus == TaskStatus.COMPLETED && !areAllSubTasksCompleted(taskId)) {
             throw new RuntimeException("All subtasks must be completed first");
         }
-        task.setStatus(newStatus);
-        taskRepository.save(task);
+        if (newStatus == TaskStatus.CANCELLED) {
+            taskRepository.delete(task);
+        } else {
+            task.setStatus(newStatus);
+            taskRepository.save(task);
+        }
     }
 
     @Override
@@ -72,5 +76,9 @@ public class TaskServiceImpl implements TaskService {
     public Task findById(Long taskId) {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
+    }
+    @Override
+    public List<Task> getTasksByUserExcludeCompleted(User user) {
+        return taskRepository.findByUserAndStatusNot(user, TaskStatus.COMPLETED);
     }
 }
