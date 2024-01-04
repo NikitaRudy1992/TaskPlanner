@@ -17,8 +17,6 @@ public class AdminController {
     private final TaskService taskService;
     private final UserService userService;
 
-    // Конструктор
-
     @GetMapping
     public String adminDashboard(Model model) {
         model.addAttribute("tasks", taskService.getAllTasks());

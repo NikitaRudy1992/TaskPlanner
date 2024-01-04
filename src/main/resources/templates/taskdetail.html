@@ -89,7 +89,7 @@
         <h3>Add New SubTask</h3>
         <form th:action="@{/tasks/{taskId}/addSubTask(taskId=${task.taskId})}" method="post">
             <input type="text" name="title" placeholder="SubTask Title" required/>
-            <!-- Другие поля подзадачи, если необходимо -->
+            <!-- Другие поля подзадачи-->
             <button type="submit">Add SubTask</button>
         </form>
     </div>
@@ -119,7 +119,6 @@
                     </select>
                     <button type="submit">Update</button>
                 </form>
-                <!-- Дополнительно можно добавить кнопку удаления подзадачи -->
             </td>
         </tr>
         </tbody>
