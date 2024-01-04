@@ -49,9 +49,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                         Authentication authentication) throws IOException, ServletException {
                         Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
                         if (roles.contains("ROLE_ADMIN")) {
-                            response.sendRedirect("/admin"); // URL для администратора
+                            response.sendRedirect("/admin");
                         } else {
-                            response.sendRedirect("/tasks"); // URL для обычных пользователей
+                            response.sendRedirect("/tasks");
                         }
                     }
                 })
@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .and()
-                .csrf().disable(); // Включите CSRF защиту, когда это будет необходимо
+                .csrf().disable();
     }
 
     @Override
