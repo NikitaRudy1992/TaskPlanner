@@ -81,4 +81,10 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getTasksByUserExcludeCompleted(User user) {
         return taskRepository.findByUserAndStatusNot(user, TaskStatus.COMPLETED);
     }
+
+    @Override
+    public List<Task> getTasksWithUpcomingDeadline(User user) {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        return taskRepository.findByUserAndDeadline(user, tomorrow);
+    }
 }

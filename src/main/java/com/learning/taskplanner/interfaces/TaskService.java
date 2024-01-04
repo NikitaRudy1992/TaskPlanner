@@ -18,4 +18,5 @@ public interface TaskService {
     List<Task> getIncompleteTasks(User user);
     Task findById(Long taskId);
     List<Task> getTasksByUserExcludeCompleted(User user);
+    List<Task> getTasksWithUpcomingDeadline(User user);
 }
