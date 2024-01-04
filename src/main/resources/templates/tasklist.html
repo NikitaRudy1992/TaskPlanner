@@ -70,6 +70,11 @@
     .menu-button:hover {
       background-color: #0056b3;
     }
+    table select {
+      max-width: 100%;
+      box-sizing: border-box;
+      margin: 0 auto;
+    }
   </style>
 </head>
 <body>
@@ -185,6 +190,10 @@
           </select>
           <button type="submit">Update</button>
         </form>
+      </td>
+      <td>
+      <span th:if="${#lists.contains(tasksWithUpcomingDeadline, task)}"
+            style="color: red;">Deadline Tomorrow!</span>
       </td>
     </tr>
     </tbody>
