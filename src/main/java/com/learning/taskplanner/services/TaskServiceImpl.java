@@ -87,4 +87,13 @@ public class TaskServiceImpl implements TaskService {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         return taskRepository.findByUserAndDeadline(user, tomorrow);
     }
+    @Override
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    @Override
+    public void deleteTask(Long taskId) {
+        taskRepository.deleteById(taskId);
+    }
 }
