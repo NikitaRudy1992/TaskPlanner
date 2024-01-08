@@ -6,6 +6,8 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +22,17 @@ public class Task {
     @Column(name = "task_id")
     private Long taskId;
 
+    @NotBlank(message = "Title cannot be empty")
     @Column(name = "title")
     private String title;
 
+    @NotBlank(message = "Description cannot be empty")
     @Column(name = "description")
     private String description;
 
-    @Column(name = "deadline")
+    @NotNull(message = "Deadline cannot be null")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @Column(name = "deadline")
     private LocalDate deadline;
 
     @Column(name = "status")

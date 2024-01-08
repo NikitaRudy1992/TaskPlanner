@@ -4,6 +4,7 @@ import com.learning.taskplanner.model.enums.TaskStatus;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "subtasks")
@@ -14,6 +15,7 @@ public class SubTask {
     @Column(name = "subtask_id")
     private Long subtaskId;
 
+    @NotBlank(message = "Title cannot be empty")
     @Column(name = "title", nullable = false)
     private String title;
 

@@ -70,6 +70,9 @@
     .menu-button:hover {
       background-color: #0056b3;
     }
+    .error {
+      color: red;
+      font-size: 0.85em;
     table select {
       max-width: 100%;
       box-sizing: border-box;
@@ -139,12 +142,15 @@
     <form th:action="@{/tasks/create}" method="post" th:object="${newTask}">
       <label for="newTitle">Title:</label>
       <input type="text" id="newTitle" name="title" th:field="*{title}" required/>
+      <span class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
 
       <label for="newDescription">Description:</label>
       <textarea id="newDescription" name="description" th:field="*{description}"></textarea>
+      <span class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
 
       <label for="newDeadline">Deadline:</label>
       <input type="date" id="newDeadline" name="deadline" th:field="*{deadline}"/>
+      <span class="error" th:if="${#fields.hasErrors('deadline')}" th:errors="*{deadline}"></span>
 
       <label for="newPriority">Priority:</label>
       <select id="newPriority" name="priority" th:field="*{priority}">
@@ -152,6 +158,7 @@
         <option value="MEDIUM">Medium</option>
         <option value="HIGH">High</option>
       </select>
+      <span class="error" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></span>
 
       <button type="submit">Create Task</button>
     </form>
