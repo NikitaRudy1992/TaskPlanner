@@ -27,6 +27,8 @@ public class TaskController {
 
     @GetMapping
     public String showTasks(Model model, @AuthenticationPrincipal User currentUser) {
+        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
+        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
         List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
         model.addAttribute("tasks", tasks);
         model.addAttribute("newTask", new Task());

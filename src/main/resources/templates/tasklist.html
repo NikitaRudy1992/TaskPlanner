@@ -73,6 +73,10 @@
     .error {
       color: red;
       font-size: 0.85em;
+    table select {
+      max-width: 100%;
+      box-sizing: border-box;
+      margin: 0 auto;
     }
   </style>
 </head>
@@ -193,6 +197,10 @@
           </select>
           <button type="submit">Update</button>
         </form>
+      </td>
+      <td>
+      <span th:if="${#lists.contains(tasksWithUpcomingDeadline, task)}"
+            style="color: red;">Deadline Tomorrow!</span>
       </td>
     </tr>
     </tbody>
