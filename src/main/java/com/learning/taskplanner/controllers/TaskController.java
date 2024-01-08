@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -41,7 +43,7 @@ public class TaskController {
     }
 
     @PostMapping("/create")
-    public String createTask(@ModelAttribute("newTask") Task newTask, BindingResult result, @AuthenticationPrincipal User currentUser) {
+    public String createTask(@ModelAttribute("newTask") @Valid Task newTask, BindingResult result, @AuthenticationPrincipal User currentUser) {
         if (result.hasErrors()) {
             return "tasklist";
         }
@@ -71,7 +73,7 @@ public class TaskController {
     }
 
     @PostMapping("/{taskId}/addSubTask")
-    public String addSubTask(@PathVariable Long taskId, @ModelAttribute("subTask") SubTask subTask, BindingResult result) {
+    public String addSubTask(@PathVariable Long taskId, @ModelAttribute("subTask") @Valid SubTask subTask, BindingResult result) {
         if (result.hasErrors()) {
             return "redirect:/tasks/" + taskId;
         }

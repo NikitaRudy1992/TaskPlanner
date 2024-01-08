@@ -70,6 +70,10 @@
         .menu-button:hover {
             background-color: #0056b3;
         }
+        .error {
+            color: red;
+            font-size: 0.85em;
+        }
     </style>
 </head>
 <body>
@@ -81,7 +85,6 @@
     <div>
         <h3 th:text="${task.title}"></h3>
         <p th:text="${task.description}"></p>
-        <!-- Другие детали задачи -->
     </div>
 
     <!-- Форма для добавления новой подзадачи -->
@@ -89,7 +92,6 @@
         <h3>Add New SubTask</h3>
         <form th:action="@{/tasks/{taskId}/addSubTask(taskId=${task.taskId})}" method="post">
             <input type="text" name="title" placeholder="SubTask Title" required/>
-            <!-- Другие поля подзадачи, если необходимо -->
             <button type="submit">Add SubTask</button>
         </form>
     </div>
@@ -119,7 +121,6 @@
                     </select>
                     <button type="submit">Update</button>
                 </form>
-                <!-- Дополнительно можно добавить кнопку удаления подзадачи -->
             </td>
         </tr>
         </tbody>
