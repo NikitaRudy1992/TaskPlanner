@@ -1,5 +1,6 @@
 package com.learning.taskplanner.controllers;
 
+import com.learning.taskplanner.exceptions.CustomUsernameExistsException;
 import com.learning.taskplanner.interfaces.UserService;
 import com.learning.taskplanner.model.User;
 import lombok.AllArgsConstructor;
@@ -26,12 +27,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
+    public String registerUser(@ModelAttribute("user") @Valid User user, BindingResult result, Model model) {
         if (result.hasErrors()) {
             return "register";
         }
-        userService.registerNewUser(user);
-        return "redirect:/login?registrationSuccess";
+        try {
+            userService.registerNewUser(user);
+            return "redirect:/login?registrationSuccess";
+        } catch (CustomUsernameExistsException ex) {
+            model.addAttribute("registrationError", ex.getMessage());
+            model.addAttribute("user", user);
+            return "register";
+        }
     }
 
     @GetMapping("/login")

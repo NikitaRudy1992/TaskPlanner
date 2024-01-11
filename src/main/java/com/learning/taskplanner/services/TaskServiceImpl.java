@@ -41,7 +41,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
         if (newStatus == TaskStatus.COMPLETED && !areAllSubTasksCompleted(taskId)) {
-            throw new RuntimeException("All subtasks must be completed first");
+            throw new RuntimeException("Subtasks not completed");
         }
         if (newStatus == TaskStatus.CANCELLED) {
             taskRepository.delete(task);

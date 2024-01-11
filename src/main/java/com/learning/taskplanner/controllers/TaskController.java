@@ -13,10 +13,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/tasks")
@@ -30,7 +32,12 @@ public class TaskController {
         List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
         model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
         List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
+        List<Long> tasksWithIncompleteSubTasks = tasks.stream()
+                .filter(task -> !taskService.areAllSubTasksCompleted(task.getTaskId()))
+                .map(Task::getTaskId)
+                .collect(Collectors.toList());
         model.addAttribute("tasks", tasks);
+        model.addAttribute("tasksWithIncompleteSubTasks", tasksWithIncompleteSubTasks);
         model.addAttribute("newTask", new Task());
         return "tasklist";
     }
@@ -54,9 +61,16 @@ public class TaskController {
     }
 
     @PostMapping("/updateStatus/{taskId}")
-    public String updateTaskStatus(@PathVariable Long taskId, @RequestParam("status") TaskStatus status) {
-        taskService.updateTaskStatus(taskId, status);
-        return "redirect:/tasks";
+    public String updateTaskStatus(@PathVariable Long taskId,
+                                   @RequestParam("status") TaskStatus status,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            taskService.updateTaskStatus(taskId, status);
+            return "redirect:/tasks";
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/tasks";
+        }
     }
 
     @GetMapping("/search")
@@ -68,7 +82,9 @@ public class TaskController {
                               Model model) {
         List<Task> searchResults = taskService.searchTasks(title, status, priority, deadline, currentUser);
         model.addAttribute("searchResults", searchResults);
-        List<Task> tasks = taskService.getTasksByUser(currentUser);
+        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
+        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
+        List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
         model.addAttribute("tasks", tasks);
         model.addAttribute("newTask", new Task());
         return "tasklist";

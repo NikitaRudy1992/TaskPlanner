@@ -22,11 +22,11 @@
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
-      table-layout: fixed; /* Фиксированная ширина колонок */
+      table-layout: auto;
     }
     table, th, td {
       border: 1px solid #ddd;
-      word-wrap: break-word; /* Перенос слов на новую строку */
+      word-wrap: break-word;
     }
     th, td {
       text-align: left;
@@ -73,10 +73,22 @@
     .error {
       color: red;
       font-size: 0.85em;
-    table select {
-      max-width: 100%;
+    }
+    .update-status-form {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .update-status-form select,
+    .update-status-form button {
+      padding: 4px 6px;
+      font-size: 12px;
       box-sizing: border-box;
-      margin: 0 auto;
+    }
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   </style>
 </head>
@@ -182,14 +194,13 @@
       <td>
         <a th:href="@{/tasks/{taskId}(taskId=${task.taskId})}" th:text="${task.title}"></a>
       </td>
-      <td th:text="${task.title}"></td>
       <td th:text="${task.description}"></td>
       <td th:text="${task.deadline}"></td>
       <td th:text="${task.status}"></td>
       <td th:text="${task.priority}"></td>
       <td>
-        <form th:action="@{/tasks/updateStatus/{taskId}(taskId=${task.taskId})}" method="post">
-          <select name="status">
+        <form th:action="@{/tasks/updateStatus/{taskId}(taskId=${task.taskId})}" method="post" class="update-status-form">
+          <select name="status" class="task-status-select">
             <option value="NEW" th:selected="${task.status == 'NEW'}">New</option>
             <option value="IN_PROGRESS" th:selected="${task.status == 'IN_PROGRESS'}">In Progress</option>
             <option value="COMPLETED" th:selected="${task.status == 'COMPLETED'}">Completed</option>
@@ -197,10 +208,11 @@
           </select>
           <button type="submit">Update</button>
         </form>
-      </td>
       <td>
-      <span th:if="${#lists.contains(tasksWithUpcomingDeadline, task)}"
-            style="color: red;">Deadline Tomorrow!</span>
+        <span th:if="${#lists.contains(tasksWithUpcomingDeadline, task)}"
+              style="color: red;">Deadline Tomorrow!</span>
+        <span th:if="${tasksWithIncompleteSubTasks.contains(task.taskId)}"
+              class="error">Subtasks not completed</span>
       </td>
     </tr>
     </tbody>

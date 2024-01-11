@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-//требуется валидация
 @Entity
 @Table(name = "tasks")
 @Data
