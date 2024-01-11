@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -54,9 +55,16 @@ public class TaskController {
     }
 
     @PostMapping("/updateStatus/{taskId}")
-    public String updateTaskStatus(@PathVariable Long taskId, @RequestParam("status") TaskStatus status) {
-        taskService.updateTaskStatus(taskId, status);
-        return "redirect:/tasks";
+    public String updateTaskStatus(@PathVariable Long taskId,
+                                   @RequestParam("status") TaskStatus status,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            taskService.updateTaskStatus(taskId, status);
+            return "redirect:/tasks";
+        } catch (RuntimeException ex) {
+            redirectAttributes.addFlashAttribute("errorMessage", ex.getMessage());
+            return "redirect:/tasks";
+        }
     }
 
     @GetMapping("/search")

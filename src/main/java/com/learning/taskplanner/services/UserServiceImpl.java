@@ -1,5 +1,6 @@
 package com.learning.taskplanner.services;
 
+import com.learning.taskplanner.exceptions.CustomUsernameExistsException;
 import com.learning.taskplanner.interfaces.UserService;
 import com.learning.taskplanner.model.User;
 import com.learning.taskplanner.model.enums.UserRole;
@@ -27,6 +28,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUser(User user) {
+        userRepository.findByUsername(user.getUsername())
+                .ifPresent(u -> {
+                    throw new CustomUsernameExistsException("Username already exists.");
+                });
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(UserRole.USER);
         userRepository.save(user);
