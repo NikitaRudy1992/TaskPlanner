@@ -207,13 +207,12 @@
             <option value="CANCELLED" th:selected="${task.status == 'CANCELLED'}">Cancelled</option>
           </select>
           <button type="submit">Update</button>
-          <div th:if="${errorMessage}">
-            <span th:text="${errorMessage}" class="error"></span>
-          </div>
         </form>
       <td>
         <span th:if="${#lists.contains(tasksWithUpcomingDeadline, task)}"
               style="color: red;">Deadline Tomorrow!</span>
+        <span th:if="${tasksWithIncompleteSubTasks.contains(task.taskId)}"
+              class="error">Subtasks not completed</span>
       </td>
     </tr>
     </tbody>

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/tasks")
@@ -31,7 +32,12 @@ public class TaskController {
         List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
         model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
         List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
+        List<Long> tasksWithIncompleteSubTasks = tasks.stream()
+                .filter(task -> !taskService.areAllSubTasksCompleted(task.getTaskId()))
+                .map(Task::getTaskId)
+                .collect(Collectors.toList());
         model.addAttribute("tasks", tasks);
+        model.addAttribute("tasksWithIncompleteSubTasks", tasksWithIncompleteSubTasks);
         model.addAttribute("newTask", new Task());
         return "tasklist";
     }
