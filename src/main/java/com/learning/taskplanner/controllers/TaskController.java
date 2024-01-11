@@ -68,7 +68,9 @@ public class TaskController {
                               Model model) {
         List<Task> searchResults = taskService.searchTasks(title, status, priority, deadline, currentUser);
         model.addAttribute("searchResults", searchResults);
-        List<Task> tasks = taskService.getTasksByUser(currentUser);
+        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
+        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
+        List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
         model.addAttribute("tasks", tasks);
         model.addAttribute("newTask", new Task());
         return "tasklist";
