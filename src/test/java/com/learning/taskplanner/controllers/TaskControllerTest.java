@@ -6,6 +6,7 @@ import com.learning.taskplanner.interfaces.TaskService;
 import com.learning.taskplanner.model.SubTask;
 import com.learning.taskplanner.model.Task;
 import com.learning.taskplanner.model.User;
+import com.learning.taskplanner.model.enums.TaskPriority;
 import com.learning.taskplanner.model.enums.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -119,44 +120,44 @@ public class TaskControllerTest {
     @Test
     public void testSearchTasks() {
         // Arrange
-        String title = "Test";
+        String title = "TestTitle";
         TaskStatus status = TaskStatus.IN_PROGRESS;
+        TaskPriority priority = TaskPriority.HIGH;
         LocalDate deadline = LocalDate.now();
         List<Task> searchResults = new ArrayList<>();
         List<Task> tasksWithUpcomingDeadline = new ArrayList<>();
         List<Task> tasks = new ArrayList<>();
+        List<Long> tasksWithIncompleteSubTasks = new ArrayList<>();
 
-        when(taskService.searchTasks(title, status, null, deadline, currentUser)).thenReturn(searchResults);
+        when(taskService.searchTasks(title, status, priority, deadline, currentUser)).thenReturn(searchResults);
         when(taskService.getTasksWithUpcomingDeadline(currentUser)).thenReturn(tasksWithUpcomingDeadline);
         when(taskService.getTasksByUserExcludeCompleted(currentUser)).thenReturn(tasks);
+        when(taskService.areAllSubTasksCompleted(anyLong())).thenReturn(false);
 
-        // Act
-        String viewName = taskController.searchTasks(title, status, null, deadline, currentUser, model);
+        String viewName = taskController.searchTasks(title, status, priority, deadline, currentUser, model);
 
-        // Assert
         assertEquals("tasklist", viewName);
-        verify(model, times(4)).addAttribute(anyString(), any());
+        verify(model, times(1)).addAttribute("searchResults", searchResults);
+        verify(model, times(1)).addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
+        verify(model, times(1)).addAttribute("tasks", tasks);
+        verify(model, times(1)).addAttribute("tasksWithIncompleteSubTasks", tasksWithIncompleteSubTasks);
     }
 
     @Test
     public void testAddSubTask() {
-        // Arrange
         Long taskId = 1L;
         SubTask subTask = new SubTask();
 
         when(bindingResult.hasErrors()).thenReturn(false);
 
-        // Act
         String viewName = taskController.addSubTask(taskId, subTask, bindingResult);
 
-        // Assert
         assertEquals("redirect:/tasks/" + taskId, viewName);
         verify(subTaskService, times(1)).addSubTask(taskId, subTask);
     }
 
     @Test
     public void testUpdateSubTaskStatus() {
-        // Arrange
         Long subTaskId = 1L;
         TaskStatus status = TaskStatus.COMPLETED;
         SubTask subTask = new SubTask();
@@ -166,27 +167,22 @@ public class TaskControllerTest {
 
         when(subTaskService.findById(subTaskId)).thenReturn(subTask);
 
-        // Act
         String viewName = taskController.updateSubTaskStatus(subTaskId, status);
 
-        // Assert
         assertEquals("redirect:/tasks/2", viewName);
         verify(subTaskService, times(1)).updateSubTaskStatus(subTaskId, status);
     }
 
     @Test
     public void testShowTaskProgress() {
-        // Arrange
         List<Task> completedTasks = new ArrayList<>();
         List<Task> incompleteTasks = new ArrayList<>();
 
         when(taskService.getCompletedTasks(currentUser)).thenReturn(completedTasks);
         when(taskService.getIncompleteTasks(currentUser)).thenReturn(incompleteTasks);
 
-        // Act
         String viewName = taskController.showTaskProgress(model, currentUser);
 
-        // Assert
         assertEquals("taskprogress", viewName);
         verify(model, times(2)).addAttribute(anyString(), any());
     }

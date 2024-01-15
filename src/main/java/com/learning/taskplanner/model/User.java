@@ -39,6 +39,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Task> tasks;
 
+    @Column(name = "email")
+    private String email = "sednyova@gmail.com";
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + this.role.name()));

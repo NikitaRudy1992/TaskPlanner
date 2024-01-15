@@ -22,6 +22,7 @@ public class TaskServiceImpl implements TaskService {
 
     private TaskRepository taskRepository;
     private UserRepository userRepository;
+    private final EmailService emailService;
 
     @Override
     public List<Task> getTasksByUser(User user) {
@@ -85,7 +86,13 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> getTasksWithUpcomingDeadline(User user) {
         LocalDate tomorrow = LocalDate.now().plusDays(1);
-        return taskRepository.findByUserAndDeadline(user, tomorrow);
+        List<Task> tasks = taskRepository.findByUserAndDeadline(user, tomorrow);
+
+        if (!tasks.isEmpty()) {
+            sendDeadlineNotification(user, tasks);
+        }
+
+        return tasks;
     }
     @Override
     public List<Task> getAllTasks() {
@@ -95,5 +102,19 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         taskRepository.deleteById(taskId);
+    }
+    private void sendDeadlineNotification(User user, List<Task> tasks) {
+        String email = user.getEmail();
+        String subject = "Уведомление о дедлайне задач";
+        StringBuilder messageBuilder = new StringBuilder("Уважаемый(ая) ")
+                .append(user.getUsername())
+                .append(", у вас есть следующие задачи с дедлайном на завтра: \n");
+
+        for (Task task : tasks) {
+            messageBuilder.append("- ").append(task.getTitle()).append(" (дедлайн: ")
+                    .append(task.getDeadline().toString()).append(")\n");
+        }
+
+        emailService.sendEmail(email, subject, messageBuilder.toString());
     }
 }
