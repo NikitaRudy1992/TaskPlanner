@@ -29,16 +29,7 @@ public class TaskController {
 
     @GetMapping
     public String showTasks(Model model, @AuthenticationPrincipal User currentUser) {
-        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
-        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
-        List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
-        List<Long> tasksWithIncompleteSubTasks = tasks.stream()
-                .filter(task -> !taskService.areAllSubTasksCompleted(task.getTaskId()))
-                .map(Task::getTaskId)
-                .collect(Collectors.toList());
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("tasksWithIncompleteSubTasks", tasksWithIncompleteSubTasks);
-        model.addAttribute("newTask", new Task());
+        addCommonAttributes(model, currentUser);
         return "tasklist";
     }
 
@@ -82,11 +73,7 @@ public class TaskController {
                               Model model) {
         List<Task> searchResults = taskService.searchTasks(title, status, priority, deadline, currentUser);
         model.addAttribute("searchResults", searchResults);
-        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
-        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
-        List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
-        model.addAttribute("tasks", tasks);
-        model.addAttribute("newTask", new Task());
+        addCommonAttributes(model, currentUser);
         return "tasklist";
     }
 
@@ -115,5 +102,19 @@ public class TaskController {
         model.addAttribute("incompleteTasks", incompleteTasks);
 
         return "taskprogress";
+    }
+    private void addCommonAttributes(Model model, User currentUser) {
+        List<Task> tasksWithUpcomingDeadline = taskService.getTasksWithUpcomingDeadline(currentUser);
+        model.addAttribute("tasksWithUpcomingDeadline", tasksWithUpcomingDeadline);
+
+        List<Task> tasks = taskService.getTasksByUserExcludeCompleted(currentUser);
+        List<Long> tasksWithIncompleteSubTasks = tasks.stream()
+                .filter(task -> !taskService.areAllSubTasksCompleted(task.getTaskId()))
+                .map(Task::getTaskId)
+                .collect(Collectors.toList());
+
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("tasksWithIncompleteSubTasks", tasksWithIncompleteSubTasks);
+        model.addAttribute("newTask", new Task());
     }
 }

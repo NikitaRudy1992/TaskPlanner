@@ -30,10 +30,12 @@ public class TaskServiceImplTest {
 
     private TaskService taskService;
 
+    private EmailService emailService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        taskService = new TaskServiceImpl(taskRepository, userRepository);
+        taskService = new TaskServiceImpl(taskRepository, userRepository, emailService);
     }
 
     @Test
